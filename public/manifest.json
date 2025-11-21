@@ -1,0 +1,23 @@
+{
+  "name": "Bundl",
+  "short_name": "Bundl",
+  "scope": "/app",
+  "description": "Bundl lets you manage, combine, and save on your favorite subscriptions directly from your crypto wallet. Create preset bundles or build your own to unlock up to 20% extra savings.",
+  "start_url": "/app",
+  "display": "standalone",
+  "background_color": "#F6754F",
+  "theme_color": "#F6754F",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icons/192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

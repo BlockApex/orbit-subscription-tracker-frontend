@@ -1,0 +1,243 @@
+@import "tailwindcss";
+
+/* 🌈 Global design tokens (CSS variables) */
+:root {
+  /* 🎨 Color palette */
+  --primary: #6c79e2;
+  --secondary: #f6754f;
+  --success: #10b981;
+  --danger: #ef4444;
+  --warning: #f59e0b;
+  --info: #0ea5e9;
+  --foreground: #90a1b9;
+  --dark: #001f3e;
+  --dark-50: #2d3c59;
+  --black: black;
+  --background: #ffffff;
+
+  /* 🖋️ Fonts */
+  --font-poppins: var(--font-poppins), sans-serif;
+  --font-arial: Arial, sans-serif;
+}
+
+/* ⚙️ Tailwind theme bridge */
+@theme inline {
+  /* 🎨 Colors */
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-success: var(--success);
+  --color-danger: var(--danger);
+  --color-warning: var(--warning);
+  --color-info: var(--info);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-dark: var(--dark);
+  --color-dark-50: var(--dark-50);
+  --color-black: var(--black);
+}
+
+/* 🌐 Base Styles */
+body {
+  background-color: var(--background);
+  color: var(--color-dark);
+  font-family: var(--font-arial);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+  padding: 0;
+  background: #ffc107;
+  background: radial-gradient(
+    circle,
+    rgba(255, 193, 7, 0.39) 45%,
+    rgba(255, 193, 7, 0.27) 60%,
+    rgba(0, 213, 190, 0.31) 100%
+  );
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-poppins);
+}
+
+p {
+  font-family: var(--font-arial);
+}
+
+button {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.wallet_button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; /* same as gap-2 */
+  padding: 0.5rem 1rem; /* same as py-2 px-4 */
+  background-color: var(
+    --primary-dark,
+    #0d9488
+  ) !important; /* fallback color */
+  border-radius: 0.5rem; /* same as rounded-lg */
+  color: white;
+  font-weight: 600; /* same as font-semibold */
+  box-shadow: 0px 15px 28px 0px #9dfff4;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+.wallet_button:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+@keyframes marquee-smooth {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee-smooth {
+  animation: marquee-smooth 4s linear infinite;
+  display: flex;
+  width: fit-content;
+}
+
+.section {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.5s ease;
+}
+
+@keyframes slow-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.slow-spin {
+  animation: slow-spin 3s linear infinite;
+}
+
+.card-bg {
+  background-image: url("../../public/assets/card-lines.svg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: top left;
+  box-shadow: 0px 36.77px 29.32px 0px #c7676726, 0px 0.99px 6.06px 0px #a745451a;
+}
+
+.card-dots {
+  background-image: url("../../public/assets/card-dots.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+}
+
+.shadow-nav {
+  box-shadow: 0px -5px 29.1px rgba(78, 62, 216, 0.4);
+}
+
+.stats-bg {
+  background-image: url("../../public/assets/stats-bg.svg");
+  background-position: top center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.subs-card-bg {
+  border-radius: 14px;
+  border: 1px solid #ffafaf;
+  background: conic-gradient(
+    from 199deg at 82.11% 38.77%,
+    #fff 0deg,
+    #ffb099 360deg
+  );
+  box-shadow: 0 -32px 75px 0 rgba(255, 98, 0, 0.03),
+    0 36px 129.5px 0 rgba(229, 9, 19, 0.16);
+}
+
+.subs-card-bg-gray {
+  border-radius: 14px;
+  border: 1px solid #929292;
+  background: conic-gradient(
+    from 199deg at 82.11% 38.77%,
+    #fff 0deg,
+    #cecece 360deg
+  );
+  box-shadow: 0 -32px 75px 0 rgba(116, 116, 116, 0.03),
+    0 36px 129.5px 0 rgba(63, 63, 63, 0.16);
+}
+
+.calender-container {
+  z-index: 0 !important;
+}
+.calender-container table {
+  border: none !important;
+  border-collapse: separate !important;
+  border-spacing: 4px !important; /* gap between cells */
+  width: 100% !important; /* ensures table fits container */
+  table-layout: fixed !important; /* important for equal cell widths */
+}
+
+.calender-container tr {
+  border: none !important;
+}
+
+.calender-container td {
+  border: none !important;
+}
+
+.calender-container th {
+  border: none !important;
+}
+
+.fc-h-event {
+  background: transparent !important;
+  border: none !important;
+}
+
+.calender-container .fc-daygrid-day {
+  position: relative; /* make cell relative */
+  padding: 0; /* optional, remove extra padding */
+}
+
+.calender-container .fc-daygrid-day-top {
+  position: absolute;
+  bottom: 2px; /* move to bottom */
+  left: 50%; /* center horizontally */
+  transform: translateX(-50%); /* perfect center */
+  z-index: 10;
+  font-weight: bold;
+}
+
+.calender-container .fc-daygrid-day-frame {
+  height: 100px; /* fixed height for all cells */
+  overflow: hidden; /* hide extra content */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* events stack at top */
+  align-items: center; /* center horizontally */
+}
