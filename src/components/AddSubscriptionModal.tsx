@@ -27,8 +27,8 @@ interface AddSubscriptionModalProps {
 interface ClientErrors {
   name?: string;
   url?: string;
-  monthlyPrice?: string;
-  renewDate?: string;
+  price?: string;
+  nextPaymentDate?: string;
   category?: string;
 }
 
@@ -51,15 +51,16 @@ const AddSubscriptionModal: React.FC<AddSubscriptionModalProps> = ({
   const [name, setName] = useState("");
   const [billingCycle, setBillingCycle] = useState<BillingCycleValue>({
     name: "Monthly",
-    value: "1 month",
+    value: "monthly",
   });
   const [image, setImage] = useState<string>("");
   const [url, setUrl] = useState("");
-  const [monthlyPrice, setMonthlyPrice] = useState("");
+  const [price, setPrice] = useState("");
+  const [packageName, setPackageName] = useState("");
   const [category, setCategory] = useState("");
-  const [renewDate, setRenewDate] = useState("");
+  const [nextPaymentDate, setNextPaymentDate] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("");
-  const [freeTrial, setFreeTrial] = useState(false);
+  const [isOnFreeTrial, setIsOnFreeTrial] = useState(false);
   const [active, setActive] = useState(false);
   const [clientErrors, setClientErrors] = useState<ClientErrors>({});
   const [loading, setLoading] = useState(false);
@@ -76,29 +77,31 @@ const AddSubscriptionModal: React.FC<AddSubscriptionModalProps> = ({
     // RESET FIELDS
     setName("");
     setUrl("");
-    setMonthlyPrice("");
-    setBillingCycle({ name: "Monthly", value: "1 month" });
-    setRenewDate("");
+    setPrice("");
+    setPackageName("");
+    setBillingCycle({ name: "Monthly", value: "monthly" });
+    setNextPaymentDate("");
     setCategory("");
-    setFreeTrial(false);
+    setIsOnFreeTrial(false);
     setActive(false);
     setImage("");
     setClientErrors({});
     setLoading(false);
-
     if (item) {
       if (isEditing) {
         const sub = item as Subscription;
         const m = sub.merchant;
 
-        setMonthlyPrice(String(sub.monthlyPrice));
+        setPrice(String(sub.price));
+        // Map frequency back to billing cycle object if needed, or just use it
         setBillingCycle({
-          name: sub.billingCycle.name,
-          value: sub.billingCycle.value,
+          name: sub.frequency === "monthly" ? "Monthly" : sub.frequency, // Simple mapping
+          value: sub.frequency,
         });
-        setRenewDate(sub.renewDate || "");
+        setNextPaymentDate(sub.nextPaymentDate || "");
         setCategory(sub.category || "");
-        setFreeTrial(sub.freeTrial || false);
+        setIsOnFreeTrial(sub.isOnFreeTrial || false);
+        setPackageName(sub.packageName || "");
         setActive(sub.active || false);
         setImage(m.logo || "");
       } else {
@@ -117,10 +120,10 @@ const AddSubscriptionModal: React.FC<AddSubscriptionModalProps> = ({
     if (!merchantDisplay && url && !/^https?:\/\/.+/.test(url))
       errors.url = "Enter a valid URL";
 
-    if (!monthlyPrice || isNaN(Number(monthlyPrice)) || Number(monthlyPrice) <= 0)
-      errors.monthlyPrice = "Enter a valid monthly price";
+    if (!price || isNaN(Number(price)) || Number(price) <= 0)
+      errors.price = "Enter a valid monthly price";
 
-    if (!renewDate) errors.renewDate = "Next renewal date is required";
+    if (!nextPaymentDate) errors.nextPaymentDate = "Next renewal date is required";
     if (!category) errors.category = "Select a category";
 
     setClientErrors(errors);
@@ -130,40 +133,52 @@ const AddSubscriptionModal: React.FC<AddSubscriptionModalProps> = ({
 
   const handleAdd = () => {
     if (!validate()) return;
-    let data = {
-      packageName:"",
-      category:category,
-      frequency:billingCycle.value,
-      price:monthlyPrice,
-      paymentMethod:paymentMethod,
-      isOnFreeTrial:freeTrial,
-      nextPaymentDate:''
-    }
     const subscription: Subscription = {
-      merchant: isEditing
-        ? (item as Subscription).merchant
-        : item
-          ? (item as MerchantType)
-          : {
-            _id: Date.now().toString(),
-            name,
-            website: url,
-            logo: image || "",
-          },
+      merchant: (() => {
+        // If editing, keep merchant as-is
+        if (isEditing) return (item as Subscription).merchant;
 
-      monthlyPrice,
-      billingCycle,
-      renewDate,
+        // If item exists (merchant from search)
+        if (item) {
+          const merchantItem = item as MerchantType;
+
+          // If merchant has no _id → mark as custom
+          if (!merchantItem._id) {
+            return {
+              custom: true,
+              _id: Date.now().toString(),
+              name: merchantItem.name,
+              website: merchantItem.website || "",
+              logo: merchantItem.logo || "",
+            };
+          }
+
+          // Normal merchant selected from list
+          return merchantItem;
+        }
+
+        // If no item → custom subscription
+        return {
+          custom: true,
+          _id: Date.now().toString(),
+          name,
+          website: url,
+          logo: image || "",
+        };
+      })(),
+
+      price,
+      frequency: billingCycle.value,
+      nextPaymentDate,
       category,
-      freeTrial,
+      isOnFreeTrial,
       paymentMethod,
+      packageName,
       active,
       isEdit: isEditing,
     };
-
-    console.log(subscription , "subscriptionsubscriptionsubscription")
-    // handleAddSubscription(subscription);
-    // closeModal();
+    handleAddSubscription(subscription);
+    closeModal();
   };
 
   const handleImageChange = async (file: File | null, previewUrl: string | null) => {
@@ -229,21 +244,28 @@ const AddSubscriptionModal: React.FC<AddSubscriptionModalProps> = ({
           )}
 
           <Input
-            value={monthlyPrice}
-            onChange={(v) => setMonthlyPrice(String(v))}
+            value={packageName}
+            onChange={setPackageName}
+            label="Package Name (Optional)"
+            placeholder="e.g. Premium"
+          />
+
+          <Input
+            value={price}
+            onChange={(v) => setPrice(String(v))}
             label="Monthly Price"
             placeholder="0.00"
-            error={clientErrors.monthlyPrice}
+            error={clientErrors.price}
           />
 
           <BillingCycle value={billingCycle} onChange={setBillingCycle} />
 
           <Input
             type="date"
-            value={renewDate}
-            onChange={setRenewDate}
+            value={nextPaymentDate}
+            onChange={setNextPaymentDate}
             label="Next Renewal Date"
-            error={clientErrors.renewDate}
+            error={clientErrors.nextPaymentDate}
           />
 
           <Select
@@ -262,7 +284,7 @@ const AddSubscriptionModal: React.FC<AddSubscriptionModalProps> = ({
           />
           <div className="flex items-center justify-between">
             <span>Free Trial</span>
-            <Switch checked={freeTrial} onChange={setFreeTrial} />
+            <Switch checked={isOnFreeTrial} onChange={setIsOnFreeTrial} />
           </div>
 
           <div className="flex items-center justify-between">

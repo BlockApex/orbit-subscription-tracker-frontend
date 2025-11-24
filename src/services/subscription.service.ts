@@ -1,0 +1,43 @@
+import { Subscription } from "@/app/import-subscriptions/manual/page";
+import { Api } from "../config";
+
+
+
+
+export type CreateSubscriptionPayload = Omit<Subscription, "merchant"> & {
+    merchant: string | {
+        name: string;
+        logo?: string;
+        website?: string;
+        custom?: boolean;
+    };
+};
+
+export const createSubscription = async (data: CreateSubscriptionPayload) => {
+    try {
+        const response = await Api.post("/subscriptions/me", data);
+        return response.data;
+    } catch (error) {
+        throw error
+    }
+};
+
+export const updateSubscription = async (id: string, data: CreateSubscriptionPayload) => {
+    try {
+        const response = await Api.patch(`/subscriptions/me/${id}`, data);
+        return response.data;
+    } catch (error) {
+        throw error
+    }
+};
+
+
+export const deleteSubscription = async (id: string) => {
+    try {
+        const response = await Api.delete(`/subscriptions/me/${id}`);
+        return response.data;
+    } catch (error) {
+        throw error
+    }
+};
+

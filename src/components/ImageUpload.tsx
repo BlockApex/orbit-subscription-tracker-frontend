@@ -23,6 +23,7 @@ export const ImageUpload = ({
 
     useEffect(() => {
         if (value) setPreview(value);
+        return () => setPreview(null);
     }, [value]);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -11,6 +11,7 @@ import toast from "react-hot-toast";
 import { Spinner } from "@/components/common/Spinner";
 import Merchant from "@/components/Merchant";
 import { useMiscStore } from "@/store/miscStore";
+import { createSubscription } from "@/services/subscription.service";
 
 
 
@@ -23,6 +24,8 @@ export interface MerchantType {
   isDeleted?: boolean;
   createdAt?: string;
   updatedAt?: string;
+  custom?: boolean;
+
 }
 
 export interface BillingCycle {
@@ -31,15 +34,17 @@ export interface BillingCycle {
 }
 
 export interface Subscription {
-  merchant: MerchantType | { _id: string; name: string; logo?: string; website?: string }; // supports custom
-  monthlyPrice: number | string;
-  billingCycle: BillingCycle;
-  renewDate?: string;
-  category?: string;
-  freeTrial?: boolean;
+  _id?: string;
+  merchant: MerchantType | { _id?: string; name: string; logo?: string; website?: string, custom?: boolean }; // supports custom
+  packageName?: string;
+  category: string;
+  frequency: string;
+  price: string;
+  paymentMethod: string;
+  isOnFreeTrial: boolean;
+  nextPaymentDate: string;
   active?: boolean;
   isEdit?: boolean;
-  paymentMethod?: string;
 }
 
 
@@ -57,7 +62,7 @@ const ImportManualSubscription: React.FC = () => {
   const [searchResults, setSearchResults] = useState<MerchantType[]>([]);
   const [searching, setSearching] = useState(false);
 
-  const isEditing = selectedItem && "billingCycle" in selectedItem;
+  const isEditing = selectedItem && "frequency" in selectedItem;
 
   // Debounce search
   useEffect(() => {
@@ -112,15 +117,70 @@ const ImportManualSubscription: React.FC = () => {
     setOpen(true);
   };
 
-  const handleAddSubscription = (subs: Subscription) => {
-    if (subs.isEdit) {
-      setSubscriptions(prev =>
-        prev.map(s => s.merchant._id === subs.merchant._id ? subs : s)
+
+  const handleAddSubscription = async (subs: Subscription) => {
+    const toastId = "add-subs";
+
+    toast.loading("Saving subscription...", { id: toastId });
+
+    try {
+      // Prepare payload
+      const data: Omit<Subscription, "merchant"> & {
+        currency: string;
+        merchant: string | {
+          name: string;
+          logo?: string;
+          website?: string;
+          custom?: boolean;
+        };
+      } = {
+        ...subs,
+        currency:"691f1f84c2b239c4a506fd0c"
+      };
+
+      if (subs.merchant && typeof subs.merchant !== "string" && subs.merchant.custom) {
+        data.merchant = {
+          name: subs.merchant.name,
+          logo: subs.merchant.logo,
+          website: subs.merchant.website,
+          custom: true,
+        };
+      } else if (typeof subs.merchant !== "string") {
+        data.merchant = subs.merchant._id!;
+      }
+
+      // Remove modal-only fields
+      delete data.isEdit;
+      delete data.active;
+
+      // API call
+      const response = await createSubscription(data);
+      console.log(response)
+      setSubscriptions(prev => [...prev, {...response, frequency:response.frequency.text}]);
+      setSearchTerm("");
+      toast.success("Subscription saved!", { id: toastId });
+
+      // Update local state
+      // if (subs.isEdit) {
+      //   setSubscriptions(prev =>
+      //     prev.map(s =>
+      //       typeof s.merchant !== "string" && s.merchant._id === (subs.merchant as MerchantType)._id
+      //         ? subs
+      //         : s
+      //     )
+      //   );
+      // } else {
+      //   setSubscriptions(prev => [...prev, subs]);
+      // }
+
+    } catch (err: unknown) {
+      toast.error(
+        err instanceof Error ? err.message : "Failed to create subscription",
+        { id: toastId }
       );
-    } else {
-      setSubscriptions(prev => [...prev, subs]);
     }
   };
+
 
   const removeSubscription = (m: MerchantType) => {
     setSubscriptions(prev => prev.filter(s => s.merchant._id !== m._id));
@@ -130,7 +190,7 @@ const ImportManualSubscription: React.FC = () => {
 
   const filteredMerchants =
     merchants?.filter(
-      m => !subscribedMerchantIds.has(m._id) && m.name.toLowerCase().includes(debouncedSearch.toLowerCase())
+      m => m._id && !subscribedMerchantIds.has(m._id) && m.name.toLowerCase().includes(debouncedSearch.toLowerCase())
     );
 
   return (
@@ -170,9 +230,9 @@ const ImportManualSubscription: React.FC = () => {
           {subscriptions.map((s) => {
             const m = s.merchant;
             return (
-              <div key={m._id} className="w-full bg-primary/20 flex items-center border border-primary p-4 rounded-xl">
+              <div key={s._id} className="w-full bg-primary/20 flex items-center border border-primary p-4 rounded-xl">
                 <button
-                  onClick={() => removeSubscription(m)}
+                  onClick={() => removeSubscription(m as MerchantType)}
                   className="w-7 h-7 flex items-center justify-center rounded-lg border border-foreground me-3 bg-primary"
                 >
                   <Check size={17} className="text-white" />
@@ -193,7 +253,7 @@ const ImportManualSubscription: React.FC = () => {
                     <div>
                       <p className="flex items-center gap-2">{m.name}</p>
                       <small className="text-sm text-foreground">
-                        {`$${s.monthlyPrice}/${s.billingCycle.name.toLowerCase().replace("ly", "")}`}
+                        {`$${s.price}/${s.frequency}`}
                       </small>
                     </div>
                   </div>
