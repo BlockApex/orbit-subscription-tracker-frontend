@@ -39,7 +39,6 @@ const SubscriptionCard: React.FC<SubscriptionCardProps> = ({ subscription, claim
     const handleClaim = async () => {
         try {
             setLoading(true);
-
             // Convert formData into providedFormFields format
             const providedFormFields = Object.entries(formData).map(([fieldName, fieldValue]) => ({
                 fieldName,

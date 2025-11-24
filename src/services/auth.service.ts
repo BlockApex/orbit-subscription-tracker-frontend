@@ -11,14 +11,14 @@ export const getVerificationMessage = async () => {
     }
 };
 
-export const login = async (walletAddress: string, signature: string) => {
+export const login = async (idToken:string) => {
     try {
-        const response = await Api.post("/user/login", { walletAddress, signature });
+        const response = await Api.post("/auth/login", { idToken});
         if (!response?.data) throw new Error("Empty response from server.");
         return response.data;
     } catch (error) {
         console.log(error);
-        throw new Error("Failed to fetch verification message.");
+        throw error;
     }
 }
 
@@ -61,7 +61,7 @@ export const uploadImage = async (image: File) => {
         const formData = new FormData();
         formData.append("file", image);
 
-        const response = await Api.post("/user/upload-image", formData, {
+        const response = await Api.post("/upload-image", formData, {
             headers: {
                 "Content-Type": "multipart/form-data",
             },

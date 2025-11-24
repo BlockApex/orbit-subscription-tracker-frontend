@@ -13,9 +13,9 @@ export type BillingCycleValue = {
 };
 
 const cycles: BillingCycleValue[] = [
-  { name: "Monthly", value: "1 month" },
-  { name: "Quarterly", value: "3 months" },
-  { name: "Yearly", value: "1 year" },
+  { name: "Monthly", value: "monthly" },
+  { name: "Quarterly", value: "quarterly" },
+  { name: "Yearly", value: "yearly" },
 ];
 
 const types = [

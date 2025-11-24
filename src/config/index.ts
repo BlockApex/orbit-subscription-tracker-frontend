@@ -2,9 +2,7 @@
 import axios from "axios";
 
 // export const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https:172.18.0.33:2000';
-
-export const BASE_URL = 'https://server-production-fa9f.up.railway.app';
-// export const BASE_URL = 'https://172.18.0.33';
+export const BASE_URL = 'https://subs-tracker-production.up.railway.app';
 
 export const CHAIN = process.env.NEXT_PUBLIC_CHAIN || 'devnet';
 export const USDC_ADDRESS = '4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU';
