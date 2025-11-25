@@ -61,7 +61,7 @@ const AddSubscriptionModal: React.FC<AddSubscriptionModalProps> = ({
   const [nextPaymentDate, setNextPaymentDate] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("");
   const [isOnFreeTrial, setIsOnFreeTrial] = useState(false);
-  const [active, setActive] = useState(false);
+  const [active, setActive] = useState(true);
   const [clientErrors, setClientErrors] = useState<ClientErrors>({});
   const [loading, setLoading] = useState(false);
 
@@ -98,8 +98,16 @@ const AddSubscriptionModal: React.FC<AddSubscriptionModalProps> = ({
           name: sub.frequency === "monthly" ? "Monthly" : sub.frequency, // Simple mapping
           value: sub.frequency,
         });
-        setNextPaymentDate(sub.nextPaymentDate || "");
-        setCategory(sub.category || "");
+        // Format date to YYYY-MM-DD for input type="date"
+        const dateVal = sub.nextPaymentDate ? new Date(sub.nextPaymentDate).toISOString().split('T')[0] : "";
+        setNextPaymentDate(dateVal);
+
+        // Handle category if it's populated as an object
+        const catId = typeof sub.category === 'object' && sub.category !== null
+          ? (sub.category as any)._id
+          : sub.category;
+        setCategory(catId || "");
+
         setIsOnFreeTrial(sub.isOnFreeTrial || false);
         setPackageName(sub.packageName || "");
         setActive(sub.active || false);
@@ -134,6 +142,7 @@ const AddSubscriptionModal: React.FC<AddSubscriptionModalProps> = ({
   const handleAdd = () => {
     if (!validate()) return;
     const subscription: Subscription = {
+      _id: isEditing ? (item as Subscription)._id : undefined,
       merchant: (() => {
         // If editing, keep merchant as-is
         if (isEditing) return (item as Subscription).merchant;
@@ -286,11 +295,11 @@ const AddSubscriptionModal: React.FC<AddSubscriptionModalProps> = ({
             <span>Free Trial</span>
             <Switch checked={isOnFreeTrial} onChange={setIsOnFreeTrial} />
           </div>
-
+{/* 
           <div className="flex items-center justify-between">
             <span>Active</span>
             <Switch checked={active} onChange={setActive} />
-          </div>
+          </div> */}
         </div>
 
         <div className="w-full mt-10">

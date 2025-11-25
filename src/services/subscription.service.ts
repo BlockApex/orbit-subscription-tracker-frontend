@@ -41,3 +41,14 @@ export const deleteSubscription = async (id: string) => {
     }
 };
 
+
+
+export const getMySubscriptions = async () => {
+    try {
+        const response = await Api.get(`/subscriptions/me`);
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}

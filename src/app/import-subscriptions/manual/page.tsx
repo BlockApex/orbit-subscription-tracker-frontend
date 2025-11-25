@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Check, ChevronLeft, ChevronRight, MoveRight, Search } from "lucide-react";
 import Input from "@/components/common/Input";
 import Image from "next/image";
@@ -11,7 +12,7 @@ import toast from "react-hot-toast";
 import { Spinner } from "@/components/common/Spinner";
 import Merchant from "@/components/Merchant";
 import { useMiscStore } from "@/store/miscStore";
-import { createSubscription } from "@/services/subscription.service";
+import { createSubscription, deleteSubscription, updateSubscription } from "@/services/subscription.service";
 
 
 
@@ -51,6 +52,7 @@ export interface Subscription {
 
 
 const ImportManualSubscription: React.FC = () => {
+  const router = useRouter();
   const { setRails, setMethods, setCategories } = useMiscStore();
   const [merchants, setMerchants] = useState<MerchantType[] | null>(null);
   const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
@@ -121,7 +123,7 @@ const ImportManualSubscription: React.FC = () => {
   const handleAddSubscription = async (subs: Subscription) => {
     const toastId = "add-subs";
 
-    toast.loading("Saving subscription...", { id: toastId });
+    toast.loading(subs.isEdit ? "Updating subscription..." : "Saving subscription...", { id: toastId });
 
     try {
       // Prepare payload
@@ -135,7 +137,7 @@ const ImportManualSubscription: React.FC = () => {
         };
       } = {
         ...subs,
-        currency:"691f1f84c2b239c4a506fd0c"
+        currency: "691f1f84c2b239c4a506fd0c"
       };
 
       if (subs.merchant && typeof subs.merchant !== "string" && subs.merchant.custom) {
@@ -152,38 +154,67 @@ const ImportManualSubscription: React.FC = () => {
       // Remove modal-only fields
       delete data.isEdit;
       delete data.active;
+      delete data._id; // Don't send _id in body for create/update if it's the subscription ID
 
-      // API call
-      const response = await createSubscription(data);
-      console.log(response)
-      setSubscriptions(prev => [...prev, {...response, frequency:response.frequency.text}]);
-      setSearchTerm("");
-      toast.success("Subscription saved!", { id: toastId });
-
-      // Update local state
-      // if (subs.isEdit) {
-      //   setSubscriptions(prev =>
-      //     prev.map(s =>
-      //       typeof s.merchant !== "string" && s.merchant._id === (subs.merchant as MerchantType)._id
-      //         ? subs
-      //         : s
-      //     )
-      //   );
-      // } else {
-      //   setSubscriptions(prev => [...prev, subs]);
-      // }
+      if (subs.isEdit && subs._id) {
+        // Update existing subscription
+        const response = await updateSubscription(subs._id, data);
+        setSubscriptions(prev =>
+          prev.map(s => s._id === subs._id ? { ...response, frequency: response.frequency.text || response.frequency } : s)
+        );
+        toast.success("Subscription updated!", { id: toastId });
+      } else {
+        // Create new subscription
+        const response = await createSubscription(data);
+        setSubscriptions(prev => [...prev, { ...response, frequency: response.frequency.text || response.frequency }]);
+        setSearchTerm("");
+        toast.success("Subscription saved!", { id: toastId });
+      }
 
     } catch (err: unknown) {
       toast.error(
-        err instanceof Error ? err.message : "Failed to create subscription",
+        err instanceof Error ? err.message : "Failed to save subscription",
         { id: toastId }
       );
     }
   };
 
 
-  const removeSubscription = (m: MerchantType) => {
-    setSubscriptions(prev => prev.filter(s => s.merchant._id !== m._id));
+  const removeSubscription = async (m: MerchantType | Subscription) => {
+    // Check if it's a saved subscription (has _id and is in subscriptions list)
+    // The current UI passes 'm' which is the merchant object from the subscription
+    // We need to find the subscription ID associated with this merchant if we are deleting by merchant
+    // However, the UI calls removeSubscription(m) where m is s.merchant.
+    // But wait, the list renders subscriptions.
+    // Let's check how removeSubscription is called: onClick={() => removeSubscription(m as MerchantType)}
+    // We should probably change the call to pass the subscription object or ID.
+
+    // Let's assume we can find the subscription by merchant ID for now, or better, update the call site.
+    // But since I can only edit this block, I will try to find the subscription in the state.
+
+    const sub = subscriptions.find(s => s.merchant._id === m._id);
+
+    if (!sub || !sub._id) {
+      // If no _id, it might be a local optimistic update or something, but here we assume all in list are saved.
+      // If it's just removing from local list before save? No, the list is 'Existing Subscriptions'.
+      // So they should have _id.
+      setSubscriptions(prev => prev.filter(s => s.merchant._id !== m._id));
+      return;
+    }
+
+    const toastId = "delete-subs";
+    toast.loading("Deleting subscription...", { id: toastId });
+
+    try {
+      await deleteSubscription(sub._id);
+      setSubscriptions(prev => prev.filter(s => s._id !== sub._id));
+      toast.success("Subscription deleted", { id: toastId });
+    } catch (err: unknown) {
+      toast.error(
+        err instanceof Error ? err.message : "Failed to delete subscription",
+        { id: toastId }
+      );
+    }
   };
 
   const subscribedMerchantIds = new Set(subscriptions.map(s => s.merchant._id));
@@ -193,6 +224,10 @@ const ImportManualSubscription: React.FC = () => {
       m => m._id && !subscribedMerchantIds.has(m._id) && m.name.toLowerCase().includes(debouncedSearch.toLowerCase())
     );
 
+
+  const handleRoute = () => {
+    router.push('/success')
+  }
   return (
     <main className="w-full min-h-screen bg-gray-50 relative overflow-hidden p-4">
       {/* Header */}
@@ -266,13 +301,13 @@ const ImportManualSubscription: React.FC = () => {
           {searching ? (
             <div className="w-full flex items-center justify-center py-4"><Spinner /></div>
           ) : searchResults.length > 0 ? (
-            searchResults.map((m) => <Merchant key={m._id} c={m} handleOpenModal={handleOpenModal} />)
+            searchResults.map((m,i) => <Merchant key={i} c={m} handleOpenModal={handleOpenModal} />)
           ) : null}
 
           {loading ? (
             <div className="w-full flex items-center justify-center py-4"><Spinner /></div>
           ) : filteredMerchants && filteredMerchants.length > 0 ? (
-            filteredMerchants.map((m) => <Merchant key={m._id} c={m} handleOpenModal={handleOpenModal} />)
+            filteredMerchants.map((m, i) => <Merchant key={i} c={m} handleOpenModal={handleOpenModal} />)
           ) : (
             <p className="text-center text-gray-500 py-4">No merchant found</p>
           )}
@@ -313,7 +348,7 @@ const ImportManualSubscription: React.FC = () => {
             )}
           </div>
           <div className="flex items-center gap-4 p-4">
-            <Button variant="light" size="sm" className="flex items-center gap-2" disabled={subscriptions.length === 0}>
+            <Button onClick={handleRoute} variant="light" size="sm" className="flex items-center gap-2" disabled={subscriptions.length === 0}>
               Continue <MoveRight size={18} />
             </Button>
           </div>

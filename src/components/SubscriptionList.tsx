@@ -1,10 +1,12 @@
 "use client"
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import SubscriptionTabs from './SubscriptionTabs'
 import { ListFilter, Plus } from 'lucide-react'
 import Image from 'next/image'
 import SubscriptionLine from './SubscriptionLine'
 import { Button } from './common/Button'
+import toast from 'react-hot-toast'
+import { getMySubscriptions } from '@/services/subscription.service'
 
 interface Subscription {
     image: string
@@ -90,6 +92,27 @@ const data: SubscriptionGroup[] = [
 
 const SubscriptionList = () => {
     const [tab, setTab] = useState<string>('all')
+    const [loading, setLoading] = useState(true);
+
+
+  // Fetch subscriptions data
+  useEffect(() => {
+    const fetchSubscriptions = async () => {
+      try {
+        setLoading(true);
+        const data = await getMySubscriptions();
+        console.log(data)
+      } catch (err: unknown) {
+        toast.error(err instanceof Error ? err.message : "Failed to fetch subscriptions");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchSubscriptions();
+  }, []);
+
+
+
 
     // Filter subscriptions based on active tab
     const filteredData = data.map(group => ({
@@ -109,7 +132,8 @@ const SubscriptionList = () => {
         return (
             <span className='text-xs text-success bg-success/10 px-4 py-1 rounded-2xl flex items-center gap-2'><span className='w-2 h-2 rounded-full bg-success inline-block' /> Bank</span>
         )
-    }
+    } 
+    
     return (
         <div className='w-full h-auto'>
             {/* Tabs + Filter */}

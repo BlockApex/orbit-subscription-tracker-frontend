@@ -25,7 +25,7 @@ export const updateMyCountry = async (id: string) => {
 
 export const getMerchants = async () => {
     try {
-        const response = await Api.get(`merchants`);
+        const response = await Api.get(`/merchants`);
         return response.data;
     } catch (error) {
         console.error(error);
