@@ -1,3 +1,4 @@
+"use client"
 import AppLayout from '@/components/common/AppLayout'
 import { Button } from '@/components/common/Button'
 import { Bell, ChevronRight, DollarSign, Download, Info, LogOut, Map, Moon, Shield, User } from 'lucide-react'
@@ -44,6 +45,13 @@ const routes = [
 ]
 
 const Profile = () => {
+
+    const handleLogout = () => {
+        // Clear localStorage and redirect to login page
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        window.location.href = '/auth';
+    }
     return (
         <AppLayout showTopbar={false}>
             <main className="w-full min-h-screen relative overflow-hidden p-4 pb-12">
@@ -102,7 +110,7 @@ const Profile = () => {
                     </div>
 
 
-                    <Button variant='danger' size='full' className='flex items-center gap-4 mt-6' ><LogOut/> Logout</Button>
+                    <Button variant='danger' size='full' className='flex items-center gap-4 mt-6' onClick={handleLogout} ><LogOut/> Logout</Button>
                 </div>
             </main>
         </AppLayout>

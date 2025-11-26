@@ -1,7 +1,7 @@
 'use client'
 import { Button } from '@/components/common/Button';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
-import { useRouter } from 'next/navigation'; 
+import { ArrowRight } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import React, { useState } from 'react';
 
@@ -32,20 +32,23 @@ const Onboard = () => {
 
     const handleSlide = (type: 'next' | 'prev') => {
         if (type === 'next') {
-            if(step === steps.length - 1){
-                router.push('/auth')
+            if (step === steps.length - 1) {
+                localStorage.setItem('hasSeenOnboard', 'true'); // Mark onboard as seen
+                router.push('/auth');
+                return;
             }
-            setStep((prev) => (prev < steps.length - 1 ? prev + 1 : prev));
+            setStep(prev => Math.min(prev + 1, steps.length - 1));
         } else {
-            setStep((prev) => (prev > 0 ? prev - 1 : prev));
+            setStep(prev => Math.max(prev - 1, 0));
         }
     };
 
     return (
         <main className={`w-full min-h-screen bg-white relative overflow-hidden transition-colors duration-500 ${data.bg}`}>
             <div className='relative flex flex-col items-center justify-between gap-4'>
-                <Image src={data.image} alt={data.title} width={500} height={700} />
-                <div className='p-4 flex flex-col gap-4 mt-8'>
+                <Image src={data.image} alt={data.title} width={500} height={500} className='flex lg:hidden' />
+                <Image src={data.image} alt={data.title} width={300} height={300} className='hidden lg:flex' />
+                <div className='p-4 flex flex-col gap-4 mt-8 lg:mt-2'>
                     <h2 className='text-3xl text-black font-bold text-center'>{data.title}</h2>
                     <p className='text-base text-black/60 text-center'>{data.description}</p>
                 </div>

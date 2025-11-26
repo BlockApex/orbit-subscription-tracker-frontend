@@ -11,7 +11,7 @@ const BottomNav = () => {
     const navItems = [
         { href: '/dashboard', label: 'Home', icon: House },
         { href: '/calender', label: 'Calender', icon: Calendar },
-        { href: '/add', label: '', icon: Plus , dark:true},
+        { href: '/sources', label: '', icon: Plus , dark:true},
         { href: '/stats', label: 'Stats', icon: PieChart },
         { href: '/profile', label: 'Profile', icon: User },
     ]

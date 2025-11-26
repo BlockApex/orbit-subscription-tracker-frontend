@@ -99,3 +99,14 @@ export const waitlist = async (email: string) => {
         throw error;
     }
 }
+
+export const getUserSpend = async () => {
+    try {
+        const response = await Api.get("/users/me/stats");
+        return response.data;
+    } catch (error) {
+        throw error
+    }
+};
+
+

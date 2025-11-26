@@ -11,6 +11,7 @@ import Image from "next/image";
 import { login } from "@/services/auth.service";
 import toast from "react-hot-toast";
 import { useAuthStore } from "@/store/authStore";
+import { getMySubscriptions } from "@/services/subscription.service";
 
 const clientId = process.env.NEXT_PUBLIC_WEB3AUTH_CLIENT_ID || "";
 const network =
@@ -77,10 +78,15 @@ export default function Login() {
       console.log('✅ Auth response:', authResponse);
       localStorage.setItem('token', authResponse.accessToken);
       localStorage.setItem('user', JSON.stringify(authResponse.user));
+      const subs_response = await getMySubscriptions();
       setUser(authResponse.user);
       setAuthenticated(true);
       if (authResponse.user?.country) {
-        router.push('/dashboard');
+        if(subs_response.length > 0){
+          router.push('/dashboard');
+          return
+        }
+        router.push('/sources');
       } else {
         router.push('/countries');
       }
@@ -109,6 +115,7 @@ export default function Login() {
 
       if (web3auth.connected) {
         const user = await web3auth.getUserInfo();
+        console.log("ID TOKEN:", user.idToken);
         handleLogin(user.idToken!);
       }
     } catch (error: any) {

@@ -4,6 +4,7 @@ import "./globals.css";
 import NextTopLoader from "nextjs-toploader";
 import { Toaster } from 'react-hot-toast';
 import Container from "@/components/common/Container";
+import AppRefresh from "@/components/common/AppRefresh";
 
 
 // Load Poppins (for headings)
@@ -61,7 +62,7 @@ export default function RootLayout({
         <meta name="mobile-web-app-capable" content="yes" />
       </head>
       <body className={`${poppins.variable} antialiased font-body`}>
-
+        <AppRefresh/>
         <NextTopLoader color="#00d5be" height={5} />
         <Container bg="#ffff">
           {children}

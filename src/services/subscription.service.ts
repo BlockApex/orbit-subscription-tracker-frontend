@@ -52,3 +52,52 @@ export const getMySubscriptions = async () => {
         throw error;
     }
 }
+
+
+export const getSubscriptionById = async (id: string) => {
+    try {
+        const response = await Api.get(`/subscriptions/me/${id}`);
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
+
+
+export const renewSubscription = async (id: string) => {
+    try {
+        const response = await Api.patch(`/subscriptions/me/${id}/mark-renewed`);
+        return response.data;
+    } catch (error) {
+        throw error
+    }
+};
+
+
+export const activeSubscription = async (id: string) => {
+    try {
+        const response = await Api.patch(`/subscriptions/me/${id}/mark-active`);
+        return response.data;
+    } catch (error) {
+        throw error
+    }
+};
+
+export const cancelSubscription = async (id: string) => {
+    try {
+        const response = await Api.patch(`/subscriptions/me/${id}/mark-cancelled`);
+        return response.data;
+    } catch (error) {
+        throw error
+    }
+};
+
+export const deleteMySubscription = async (id: string) => {
+    try {
+        const response = await Api.delete(`/subscriptions/me/${id}`);
+        return response.data;
+    } catch (error) {
+        throw error
+    }
+};
