@@ -35,7 +35,7 @@ const PaymentSuccess: React.FC<PaymentSuccessProps> = ({ open, subscription }) =
             <div className="w-full flex flex-col items-center justify-center p-4">
                 {/* ✅ Success Illustration */}
                 <Image
-                    src="/assets/logo.svg"
+                    src="/assets/logo.png"
                     alt="Success"
                     width={120}
                     height={120}

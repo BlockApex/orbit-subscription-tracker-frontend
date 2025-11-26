@@ -139,11 +139,11 @@ export default function Login() {
 
       {/* Logo + Intro Text */}
       <div className="flex flex-col items-center gap-3 text-center mt-4">
-        <Image src="/assets/logo.svg" alt="Logo" width={120} height={120} />
+        <Image src="/assets/logo.png" alt="Logo" width={120} height={120} />
         <p className="text-base text-foreground max-w-sm">
           Track, manage, and stay on top of your{" "}
           <span className="text-secondary font-medium">subscriptions</span> with
-          SubTrack.
+          Orbit Subscription Tracker.
         </p>
       </div>
 
