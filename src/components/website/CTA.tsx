@@ -3,35 +3,35 @@ import React, { useState } from "react";
 import Button from "./Button";
 import Image from "next/image";
 import toast, { Toaster } from "react-hot-toast";
-import { waitlist } from "@/app/services/auth.service";
+import { waitlist } from "@/services/auth.service";
 import { AxiosError } from "axios";
 
 const CTA = () => {
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit =  async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-        if (!email.trim()) {
-            toast.error("Please enter a valid email address");
-            return;
-        }
-        try {
-            setIsSubmitting(true);
-            await waitlist(email);
-            setIsSubmitting(false);
-            toast.success("🎉 You’ve been added to the waitlist!");
-            setEmail("");
-        } catch (err: unknown) {
-            if (err instanceof AxiosError) {
-                toast.error(err.response?.data?.message || "Something went wrong");
-                return;
-            }
-            toast.error((err as Error)?.message || "Something went wrong");
-        } finally {
-            setIsSubmitting(false);
-        }
+    if (!email.trim()) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
+    try {
+      setIsSubmitting(true);
+      await waitlist(email);
+      setIsSubmitting(false);
+      toast.success("🎉 You’ve been added to the waitlist!");
+      setEmail("");
+    } catch (err: unknown) {
+      if (err instanceof AxiosError) {
+        toast.error(err.response?.data?.message || "Something went wrong");
+        return;
+      }
+      toast.error((err as Error)?.message || "Something went wrong");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (

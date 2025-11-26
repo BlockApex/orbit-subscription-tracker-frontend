@@ -96,7 +96,7 @@ const SubscriptionDetail = () => {
     const handleRenew = async () => {
         try {
             setActionLoading(true);
-            let response = await renewSubscription(subscriptionId);
+            const response = await renewSubscription(subscriptionId);
             if (response) {
                 toast.success("Subscription marked as renewed");
                 setFlag(!flag);
@@ -114,7 +114,7 @@ const SubscriptionDetail = () => {
     const handleCancel = async () => {
         try {
             setActionLoading(true);
-            let response = await cancelSubscription(subscriptionId);
+            const response = await cancelSubscription(subscriptionId);
             if (response) {
                 toast.success("Subscription marked as cancelled");
                 setFlag(!flag);
@@ -132,7 +132,7 @@ const SubscriptionDetail = () => {
     const handleActive = async () => {
         try {
             setActionLoading(true);
-            let response = await activeSubscription(subscriptionId);
+            const response = await activeSubscription(subscriptionId);
             if (response) {
                 toast.success("Subscription marked as active");
                 setFlag(!flag);

@@ -11,9 +11,9 @@ const SuccessPage = () => {
         <main className="w-full h-screen bg-gray-50 relative overflow-hidden p-4">
             <div className='w-full min-h-screen flex flex-col items-center justify-center gap-4'>
                 <Image src='/assets/success.svg' alt='Success' width={100} height={100} />
-                <h3 className='text-2xl text-black'>You're all set!</h3>
+                <h3 className='text-2xl text-black'>You&apos;re all set!</h3>
                 <p className='text-base text-foreground text-center'>
-                    You've added 5 subscriptions. You can always add more later.
+                    You&apos;ve added 5 subscriptions. You can always add more later.
                 </p>
 
                 <div className='w-full flex flex-col gap-4'>

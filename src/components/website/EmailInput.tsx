@@ -2,7 +2,7 @@
 import React, { useState } from 'react'
 import Button from './Button'
 import toast from 'react-hot-toast';
-import { waitlist } from '@/app/services/auth.service';
+import { waitlist } from '@/services/auth.service';
 import { AxiosError } from 'axios';
 
 const EmailInput = () => {

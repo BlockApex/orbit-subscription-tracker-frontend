@@ -4,9 +4,9 @@ import { ArrowRight } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
-import { recentActiveBundles } from '@/app/services/bundle.service';
-import { Subscription } from '@/app/types/bundle.types';
-import { Spinner } from '@/app/components/common/Spinner';
+import { recentActiveBundles } from '@/services/bundle.service';
+import { Subscription } from '@/types/bundle.types';
+import { Spinner } from '@/components/common/Spinner';
 // import toast from 'react-hot-toast';
 import { capitalizeFirstLetter } from '../utils';
 

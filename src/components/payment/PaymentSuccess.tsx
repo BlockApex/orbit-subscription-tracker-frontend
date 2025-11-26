@@ -2,9 +2,9 @@ import React from 'react';
 import Image from 'next/image';
 import { Modal } from '../common/Modal';
 import { Button } from '../common/Button';
-import { Subscription } from '@/app/types/bundle.types';
+import { Subscription } from '@/types/bundle.types';
 import { ArrowDownToLine, Copy } from 'lucide-react';
-import { shortenTx } from '@/app/utils';
+import { shortenTx } from '@/utils';
 import Link from 'next/link';
 
 interface PaymentSuccessProps {

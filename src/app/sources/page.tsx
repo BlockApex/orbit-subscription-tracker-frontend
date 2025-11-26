@@ -47,7 +47,7 @@ const Sources = () => {
           Connect your sources
         </h5>
         <p className="text-base text-foreground mt-1">
-          Choose how you'd like to import your subscriptions
+          Choose how you&apos;d like to import your subscriptions
         </p>
       </div>
       {/* Source Options */}
@@ -73,12 +73,12 @@ const Sources = () => {
                   <p className="text-base text-gray-600 mt-2">
                     {src.description}
                   </p>
-                  {src.id === 'bank'?(
+                  {src.id === 'bank' ? (
                     <div className='flex items-center gap-4'>
                       <span className='text-sm px-4 py-1 bg-success/20 rounded-2xl text-success' >Recommended</span>
                       <span className='text-sm text-foreground'>Fast & secure</span>
                     </div>
-                  ):''}
+                  ) : ''}
                 </div>
               </div>
               <span

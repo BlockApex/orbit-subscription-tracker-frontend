@@ -1,9 +1,20 @@
 "use client"
 import AppLayout from '@/components/common/AppLayout'
 import { Button } from '@/components/common/Button'
+import { Spinner } from '@/components/common/Spinner'
+import { getUserSpend } from '@/services/auth.service'
+import { getMySubscriptions } from '@/services/subscription.service'
+import { useAuthStore } from '@/store/authStore'
 import { Bell, ChevronRight, DollarSign, Download, Info, LogOut, Map, Moon, Shield, User } from 'lucide-react'
 import Image from 'next/image'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+
+
+interface UserSpendResponse {
+    scaledMonthlySpend: string;
+    scaledYearlySpend: string;
+    totalSubscriptions: number;
+}
 
 
 const routes = [
@@ -45,6 +56,32 @@ const routes = [
 ]
 
 const Profile = () => {
+    const { user } = useAuthStore();
+    const [loading, setLoading] = useState(true);
+    const [spend, setSpend] = useState<UserSpendResponse | null>(null);
+    const [count, setCount] = useState<null | number>(null);
+    useEffect(() => {
+        const fetchSpend = async () => {
+            try {
+                setLoading(true);
+                const res = await getUserSpend();
+                const subs_response = await getMySubscriptions();
+                setSpend({
+                    scaledMonthlySpend: res.scaledMonthlySpend,
+                    scaledYearlySpend: res.scaledYearlySpend,
+                    totalSubscriptions: res.totalSubscriptions,
+                });
+                setCount(subs_response.length);
+            } catch (err) {
+                console.error('Failed to fetch spend:', err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchSpend();
+    }, []);
+
 
     const handleLogout = () => {
         // Clear localStorage and redirect to login page
@@ -59,19 +96,34 @@ const Profile = () => {
                     <div className='flex items-center gap-2' >
                         <Image src='/assets/mock/user.png' alt='User' width={50} height={50} className='rounded-full' />
                         <div className='flex flex-col'>
-                            <h6 className='text-lg text-black font-normal'> Syed Mujtaba </h6>
-                            <p className='text-base text-foreground font-normal'>alex.morgan@email.com</p>
+                            {user && <h6 className='text-lg text-black font-normal'> {user.name} </h6>}
+                            {user && <p className='text-base text-foreground font-normal'>{user.email}</p>}
                         </div>
                     </div>
                     <hr className='broder-b border-gray-200 my-4' />
                     <div className='flex items-start gap-10'>
                         <div className='flex flex-col gap-2'>
-                            <p className='text-base text-black'>12</p>
+
+                                {count ? (
+                                    <p className='text-base text-black'>
+                                        {count}
+                                    </p>
+                                ) : ''}
+                                {loading ? (
+                                    <Spinner size='sm' />
+                                ) : ''}
                             <p className='text-base text-foreground'>Active</p>
                         </div>
 
                         <div className='flex flex-col gap-2'>
-                            <p className='text-base text-black'>$250</p>
+                            {spend ? (
+                                <p className='text-base text-black'>
+                                    ${Number(spend.scaledMonthlySpend).toLocaleString()}
+                                </p>
+                            ) : ''}
+                            {loading ? (
+                                <Spinner size='sm' />
+                            ) : ''}
                             <p className='text-base text-foreground'>Monthly</p>
                         </div>
                     </div>
@@ -110,7 +162,7 @@ const Profile = () => {
                     </div>
 
 
-                    <Button variant='danger' size='full' className='flex items-center gap-4 mt-6' onClick={handleLogout} ><LogOut/> Logout</Button>
+                    <Button variant='danger' size='full' className='flex items-center gap-4 mt-6' onClick={handleLogout} ><LogOut /> Logout</Button>
                 </div>
             </main>
         </AppLayout>

@@ -2,7 +2,7 @@
 import { ChevronLeft } from 'lucide-react'
 import React from 'react'
 import { useRouter } from 'next/navigation'
-import { Bundle } from '@/app/types/bundle.types'
+import { Bundle } from '@/types/bundle.types'
 
 const BundleDetailHeader = ({ bundle, subscription = false }: { bundle: Bundle, subscription?: boolean }) => {
     const router = useRouter()
@@ -15,7 +15,7 @@ const BundleDetailHeader = ({ bundle, subscription = false }: { bundle: Bundle, 
             <div className='flex items-start gap-4'>
                 <button
                     onClick={() => {
-                        if(subscription) router.push('/bundles/me')
+                        if (subscription) router.push('/bundles/me')
                         else router.back()
                     }}
                     className='w-10 h-10 rounded-full bg-primary-50 flex items-center justify-center hover:bg-primary-100 transition'

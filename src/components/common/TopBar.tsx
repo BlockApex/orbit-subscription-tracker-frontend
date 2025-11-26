@@ -6,7 +6,6 @@ import Link from 'next/link'
 
 const TopBar = () => {
     const { user } = useAuthStore();
-
     return (
         <div className='w-full bg-[#F5F5F5] z-50 lg:max-w-3xl mx-auto flex items-center justify-between gap-4 sticky top-0 left-0 right-0 p-4'>
             <Link href='/profile' className='flex items-center gap-2' >

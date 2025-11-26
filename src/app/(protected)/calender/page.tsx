@@ -188,7 +188,7 @@ const CalendarPage: React.FC = () => {
     const count = subs.length - 1;
 
     return (
-      <div className="flex items-center justify-center space-x-1" onClick={() => handleShow(subs)}>
+      <div className="flex items-center justify-center space-x-1 cursor-pointer" onClick={() => handleShow(subs)}>
         <Image src={first.image} alt={first.name} width={25} height={25} className="rounded-full" unoptimized />
         {count > 0 && <span className="text-sm font-semibold text-black">+{count}</span>}
       </div>

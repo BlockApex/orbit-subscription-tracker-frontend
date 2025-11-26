@@ -82,7 +82,7 @@ export default function Login() {
       setUser(authResponse.user);
       setAuthenticated(true);
       if (authResponse.user?.country) {
-        if(subs_response.length > 0){
+        if (subs_response.length > 0) {
           router.push('/dashboard');
           return
         }
@@ -118,8 +118,8 @@ export default function Login() {
         console.log("ID TOKEN:", user.idToken);
         handleLogin(user.idToken!);
       }
-    } catch (error: any) {
-      console.error("Login error:", error?.message || error);
+    } catch (error: unknown) {
+      console.error("Login error:", error instanceof Error ? error.message : error);
     }
   };
 

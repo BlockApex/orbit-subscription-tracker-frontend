@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { Modal } from "../common/Modal";
 import Image from "next/image";
-import { Service } from "@/app/types/bundle.types";
+import { Service } from "@/types/bundle.types";
 
 interface TierModalProps {
   open: boolean;
@@ -12,7 +12,7 @@ interface TierModalProps {
 }
 
 const TierModal: React.FC<TierModalProps> = ({ open, setOpen, service, onSelectPackage }) => {
-const [selectedTier] = useState<string | null>(null);
+  const [selectedTier] = useState<string | null>(null);
 
   if (!service) return null;
 
@@ -52,9 +52,8 @@ const [selectedTier] = useState<string | null>(null);
                       onSelectPackage(service._id, pkg._id);
                       setOpen(false);
                     }}
-                    className={`px-6 py-1 border rounded-xl text-sm font-medium transition-all ${
-                      isSelected ? "bg-primary border-primary text-white" : "border-primary text-primary"
-                    }`}
+                    className={`px-6 py-1 border rounded-xl text-sm font-medium transition-all ${isSelected ? "bg-primary border-primary text-white" : "border-primary text-primary"
+                      }`}
                   >
                     {isSelected ? "Selected" : "Select"}
                   </span>

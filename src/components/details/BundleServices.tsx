@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { Sparkle } from "lucide-react";
-import { Bundle, BundleItem, Offer } from "@/app/types/bundle.types";
+import { Bundle, BundleItem, Offer } from "@/types/bundle.types";
 
 const BundleServices = ({ bundle }: { bundle: Bundle }) => {
     const [expandedId, setExpandedId] = useState<string | null>(null);
@@ -17,7 +17,7 @@ const BundleServices = ({ bundle }: { bundle: Bundle }) => {
                 <p className="text-base text-foreground font-normal">Included Services</p>
             </div>
             <div className="w-full h-[600px] lg:h-[500px] overflow-y-scroll flex flex-col gap-4">
-                {bundle.selectedPackages.map((pkg:BundleItem) => {
+                {bundle.selectedPackages.map((pkg: BundleItem) => {
                     const service = pkg.service;
                     const plan = pkg.package;
                     const isExpanded = expandedId === service._id;
@@ -76,9 +76,9 @@ const BundleServices = ({ bundle }: { bundle: Bundle }) => {
                             >
                                 <div className="px-6 pb-4">
 
-                                       <pre className="text-sm text-foreground text-wrap">
+                                    <pre className="text-sm text-foreground text-wrap">
                                         {plan.description}
-                                        </pre> 
+                                    </pre>
 
 
                                     <div className="flex items-center justify-end mt-2">

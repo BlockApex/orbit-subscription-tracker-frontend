@@ -84,7 +84,7 @@ const Countries: React.FC = () => {
             <div className="p-2">
                 <h5 className="text-xl font-normal text-black">Country of Residence</h5>
                 <p className="text-base text-foreground text-left mt-1">
-                    We'll tailor payment connectors available in your region
+                    We&apos;ll tailor payment connectors available in your region
                 </p>
 
                 <div className="w-full flex flex-col gap-4 mt-4">

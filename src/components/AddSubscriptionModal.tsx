@@ -104,7 +104,7 @@ const AddSubscriptionModal: React.FC<AddSubscriptionModalProps> = ({
 
         // Handle category if it's populated as an object
         const catId = typeof sub.category === 'object' && sub.category !== null
-          ? (sub.category as any)._id
+          ? (sub.category as { _id: string })._id
           : sub.category;
         setCategory(catId || "");
 
@@ -295,7 +295,7 @@ const AddSubscriptionModal: React.FC<AddSubscriptionModalProps> = ({
             <span>Free Trial</span>
             <Switch checked={isOnFreeTrial} onChange={setIsOnFreeTrial} />
           </div>
-{/* 
+          {/* 
           <div className="flex items-center justify-between">
             <span>Active</span>
             <Switch checked={active} onChange={setActive} />
