@@ -229,7 +229,7 @@ const ImportManualSubscription: React.FC = () => {
     router.push('/success')
   }
   return (
-    <main className="w-full min-h-screen bg-gray-50 relative overflow-hidden p-4">
+    <main className="w-full min-h-screen bg-white relative overflow-hidden p-4">
       {/* Header */}
       <div className="flex items-center gap-4 py-5 sticky top-0 bg-gray-50 z-10">
         {/* <button className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-gray-700 transition">
@@ -286,7 +286,7 @@ const ImportManualSubscription: React.FC = () => {
                       unoptimized
                     />
                     <div>
-                      <p className="flex items-center gap-2">{m.name}</p>
+                      <p className="flex items-center gap-2 text-base text-black">{m.name}</p>
                       <small className="text-sm text-foreground">
                         {`$${s.price}/${s.frequency}`}
                       </small>

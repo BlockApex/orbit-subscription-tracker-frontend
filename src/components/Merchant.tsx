@@ -24,7 +24,11 @@ const Merchant: React.FC<MerchantProps> = ({ c, handleOpenModal }) => {
                     className="rounded-xl"
                     unoptimized
                 />
-                <p>{c.name}</p>
+                <p className='text-base text-black'>{c.name}
+                    {/* <small className="text-sm text-foreground">
+                        {c.website}
+                    </small> */}
+                </p>
             </div>
             <ChevronRight className="text-foreground" size={17} />
         </div>

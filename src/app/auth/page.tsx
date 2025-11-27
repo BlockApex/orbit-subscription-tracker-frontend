@@ -125,47 +125,52 @@ export default function Login() {
 
 
   return (
-    <main className="w-full bg-white min-h-screen p-4 flex flex-col items-center justify-between">
-      {/* Hero Image */}
-      <div className="w-full lg:max-w-md mx-auto mt-8">
-        <Image
-          src="/assets/login.png"
-          alt="Login Main Image"
-          width={500}
-          height={500}
-          className="max-w-full h-auto"
-        />
+    <main className="w-full bg-white h-dvh p-4 flex flex-col items-center justify-between overflow-hidden">
+      <div className="flex-1 flex flex-col items-center justify-center w-full max-h-[60%]">
+        {/* Hero Image */}
+        <div className="w-full max-w-md flex items-center justify-center h-full">
+          <Image
+            src="/assets/login.png"
+            alt="Login Main Image"
+            width={500}
+            height={500}
+            className="w-auto h-auto max-h-full object-contain"
+            priority
+          />
+        </div>
       </div>
 
-      {/* Logo + Intro Text */}
-      <div className="flex flex-col items-center gap-3 text-center mt-4">
-        <Image src="/assets/logo.png" alt="Logo" width={120} height={120} />
-        <p className="text-base text-foreground max-w-sm">
-          Track, manage, and stay on top of your{" "}
-          <span className="text-secondary font-medium">subscriptions</span> with
-          Orbit Subscription Tracker.
+      <div className="w-full max-w-md flex flex-col items-center gap-6 pb-6">
+        {/* Logo + Intro Text */}
+        <div className="flex flex-col items-center gap-3 text-center">
+          <Image src="/assets/logo.png" alt="Logo" width={100} height={100} className="w-24 h-auto" />
+          <p className="text-sm sm:text-base text-foreground max-w-sm px-4">
+            Track, manage, and stay on top of your{" "}
+            <span className="text-secondary font-medium">subscriptions</span> with
+            Orbit Subscription Tracker.
+          </p>
+        </div>
+
+        {/* Button */}
+        <div className="w-full px-4">
+          <Button onClick={handleConnect} loading={loading} variant="primary" size="full" className="py-6 text-lg">
+            Get Started
+          </Button>
+        </div>
+
+        {/* Footer */}
+        <p className="text-xs text-foreground text-center max-w-xs">
+          By signing in, you agree to the{" "}
+          <span className="text-secondary cursor-pointer hover:underline">
+            User Agreement
+          </span>{" "}
+          and{" "}
+          <span className="text-secondary cursor-pointer hover:underline">
+            Privacy Policy
+          </span>{" "}
+          of HuddleUp Protocol.
         </p>
       </div>
-
-      {/* Button */}
-      <div className="flex flex-col items-center gap-4 w-full max-w-sm my-8">
-        <Button onClick={handleConnect} loading={loading} variant="primary" size="full">
-          Get Started
-        </Button>
-      </div>
-
-      {/* Footer */}
-      <p className="text-sm text-foreground text-center mb-4 max-w-md">
-        By signing in, you agree to the{" "}
-        <span className="text-secondary cursor-pointer hover:underline">
-          User Agreement
-        </span>{" "}
-        and{" "}
-        <span className="text-secondary cursor-pointer hover:underline">
-          Privacy Policy
-        </span>{" "}
-        of HuddleUp Protocol.
-      </p>
     </main>
   );
 }

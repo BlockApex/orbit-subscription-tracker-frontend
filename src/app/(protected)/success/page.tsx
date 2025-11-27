@@ -8,47 +8,58 @@ import React from 'react'
 const SuccessPage = () => {
     const router = useRouter();
     return (
-        <main className="w-full h-screen bg-gray-50 relative overflow-hidden p-4">
-            <div className='w-full min-h-screen flex flex-col items-center justify-center gap-4'>
-                <Image src='/assets/success.svg' alt='Success' width={100} height={100} />
-                <h3 className='text-2xl text-black'>You&apos;re all set!</h3>
-                <p className='text-base text-foreground text-center'>
-                    You&apos;ve added 5 subscriptions. You can always add more later.
-                </p>
 
-                <div className='w-full flex flex-col gap-4'>
-                    <section className='w-full border border-gray-200 rounded-xl p-4 flex items-start gap-4'>
-                        <Image src='/assets/no-data.png' alt='Subscription Example' width={50} height={50} />
+        <main className="w-full h-dvh bg-gray-50 relative overflow-hidden p-4 flex flex-col items-center justify-between">
+            <div className='w-full flex-1 flex flex-col items-center justify-center gap-6 overflow-y-auto'>
+                <div className="flex flex-col items-center gap-4 text-center">
+                    <Image src='/assets/success.svg' alt='Success' width={100} height={100} className="w-24 h-24" />
+                    <div className="space-y-2">
+                        <h3 className='text-2xl font-bold text-black'>You&apos;re all set!</h3>
+                        <p className='text-sm text-foreground max-w-[280px] mx-auto'>
+                            You&apos;ve added 5 subscriptions. You can always add more later.
+                        </p>
+                    </div>
+                </div>
+
+                <div className='w-full max-w-sm flex flex-col gap-3 px-2'>
+                    <section className='w-full bg-white border border-gray-200 rounded-xl p-4 flex items-center gap-4 shadow-sm'>
+                        <div className="shrink-0">
+                            <Image src='/assets/no-data.png' alt='Subscription Example' width={40} height={40} />
+                        </div>
                         <div>
-                            <h4 className='text-lg text-black'>Track your spending</h4>
-                            <p className='text-base text-foreground text-left'>
+                            <h4 className='text-base font-semibold text-black'>Track your spending</h4>
+                            <p className='text-xs text-foreground'>
                                 See insights and trends
                             </p>
                         </div>
                     </section>
-                    <section className='w-full border border-gray-200 rounded-xl p-4 flex items-start gap-4'>
-                        <Image src='/assets/no-data.png' alt='Subscription Example' width={50} height={50} />
+                    <section className='w-full bg-white border border-gray-200 rounded-xl p-4 flex items-center gap-4 shadow-sm'>
+                        <div className="shrink-0">
+                            <Image src='/assets/no-data.png' alt='Subscription Example' width={40} height={40} />
+                        </div>
                         <div>
-                            <h4 className='text-lg text-black'>Never miss a payment</h4>
-                            <p className='text-base text-foreground text-left'>
+                            <h4 className='text-base font-semibold text-black'>Never miss a payment</h4>
+                            <p className='text-xs text-foreground'>
                                 Get timely reminders
                             </p>
                         </div>
                     </section>
                 </div>
             </div>
-            <div className="w-full z-50 lg:max-w-3xl mx-auto flex items-center justify-center gap-4 fixed bottom-2 left-0 right-0 p-2">
+
+            <div className="w-full max-w-md pt-4">
                 <Button
                     onClick={() => router.push('/dashboard')}
                     variant="primary"
                     size="full"
-                    className="flex items-center gap-4"
+                    className="flex items-center justify-center gap-2 py-6 text-lg"
                 >
-                    Go to Dashboard  <ArrowRight size={17} />
+                    Go to Dashboard  <ArrowRight size={20} />
                 </Button>
             </div>
         </main>
     )
+
 }
 
 export default SuccessPage

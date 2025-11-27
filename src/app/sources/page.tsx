@@ -40,7 +40,7 @@ const Sources = () => {
   }
 
   return (
-    <main className="w-full min-h-screen bg-gray-50 relative overflow-hidden p-4">
+    <main className="w-full min-h-screen bg-white relative overflow-hidden p-4">
 
       <div className='mt-2'>
         <h5 className="text-xl font-normal text-black">
