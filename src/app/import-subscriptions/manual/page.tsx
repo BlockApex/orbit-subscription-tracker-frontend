@@ -232,9 +232,9 @@ const ImportManualSubscription: React.FC = () => {
     <main className="w-full min-h-screen bg-gray-50 relative overflow-hidden p-4">
       {/* Header */}
       <div className="flex items-center gap-4 py-5 sticky top-0 bg-gray-50 z-10">
-        <button className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-gray-700 transition">
+        {/* <button className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-gray-700 transition">
           <ChevronLeft className="text-white" />
-        </button>
+        </button> */}
         <h5 className="text-xl font-normal text-gray-900">Companies</h5>
       </div>
 
@@ -301,7 +301,7 @@ const ImportManualSubscription: React.FC = () => {
           {searching ? (
             <div className="w-full flex items-center justify-center py-4"><Spinner /></div>
           ) : searchResults.length > 0 ? (
-            searchResults.map((m,i) => <Merchant key={i} c={m} handleOpenModal={handleOpenModal} />)
+            searchResults.map((m, i) => <Merchant key={i} c={m} handleOpenModal={handleOpenModal} />)
           ) : null}
 
           {loading ? (

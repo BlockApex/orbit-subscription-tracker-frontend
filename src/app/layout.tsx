@@ -1,16 +1,61 @@
 import type { Metadata } from "next";
-import { Poppins } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import NextTopLoader from "nextjs-toploader";
 import { Toaster } from "react-hot-toast";
 import Container from "@/components/common/Container";
 import AppRefresh from "@/components/common/AppRefresh";
 
-// Load Poppins (for headings)
-const poppins = Poppins({
-  variable: "--font-poppins",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+// Load SF Pro
+const sfPro = localFont({
+  src: [
+    {
+      path: "../../public/fonts/SFPRODISPLAYREGULAR.otf",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/SFPRODISPLAYMEDIUM.otf",
+      weight: "500",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/SFPRODISPLAYBOLD.otf",
+      weight: "700",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/SFPRODISPLAYBLACKITALIC.otf",
+      weight: "900",
+      style: "italic",
+    },
+    {
+      path: "../../public/fonts/SFPRODISPLAYHEAVYITALIC.otf",
+      weight: "800",
+      style: "italic",
+    },
+    {
+      path: "../../public/fonts/SFPRODISPLAYLIGHTITALIC.otf",
+      weight: "300",
+      style: "italic",
+    },
+    {
+      path: "../../public/fonts/SFPRODISPLAYSEMIBOLDITALIC.otf",
+      weight: "600",
+      style: "italic",
+    },
+    {
+      path: "../../public/fonts/SFPRODISPLAYTHINITALIC.otf",
+      weight: "100",
+      style: "italic",
+    },
+    {
+      path: "../../public/fonts/SFPRODISPLAYULTRALIGHTITALIC.otf",
+      weight: "200",
+      style: "italic",
+    },
+  ],
+  variable: "--font-sfpro",
   display: "swap",
 });
 
@@ -58,7 +103,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="mobile-web-app-capable" content="yes" />
       </head>
-      <body className={`${poppins.variable} antialiased font-body`}>
+      <body className={`${sfPro.variable} antialiased font-body`}>
         <AppRefresh />
         <NextTopLoader color="#00d5be" height={5} />
         <Container bg="#ffff">{children}</Container>

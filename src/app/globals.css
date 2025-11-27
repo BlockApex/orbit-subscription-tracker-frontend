@@ -9,14 +9,14 @@
   --danger: #ef4444;
   --warning: #f59e0b;
   --info: #0ea5e9;
-  --foreground: #90a1b9;
+  --foreground: #6B7280;
   --dark: #001f3e;
   --dark-50: #2d3c59;
   --black: black;
   --background: #ffffff;
 
   /* 🖋️ Fonts */
-  --font-poppins: var(--font-poppins), sans-serif;
+  --font-sfpro: var(--font-sfpro), sans-serif;
   --font-arial: Arial, sans-serif;
 }
 
@@ -41,7 +41,7 @@
 body {
   background-color: var(--background);
   color: var(--color-dark);
-  font-family: var(--font-arial);
+  font-family: var(--font-sfpro);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   margin: 0;
@@ -61,11 +61,15 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: var(--font-poppins);
+  font-family: var(--font-sfpro);
 }
 
 p {
-  font-family: var(--font-arial);
+  font-family: var(--font-sfpro);
+}
+
+.font-body {
+  font-family: var(--font-sfpro);
 }
 
 button {
