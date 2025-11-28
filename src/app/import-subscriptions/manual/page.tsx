@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Check, ChevronLeft, ChevronRight, MoveRight, Search } from "lucide-react";
+import { Check, ChevronRight, MoveRight, Search } from "lucide-react";
 import Input from "@/components/common/Input";
 import Image from "next/image";
 import AddSubscriptionModal from "@/components/AddSubscriptionModal";
@@ -231,7 +231,7 @@ const ImportManualSubscription: React.FC = () => {
   return (
     <main className="w-full min-h-screen bg-white relative overflow-hidden p-4">
       {/* Header */}
-      <div className="flex items-center gap-4 py-5 sticky top-0 bg-gray-50 z-10">
+      <div className="flex items-center gap-4 py-5 sticky top-0 z-10">
         {/* <button className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-gray-700 transition">
           <ChevronLeft className="text-white" />
         </button> */}
@@ -248,7 +248,7 @@ const ImportManualSubscription: React.FC = () => {
           icon={<Search className="text-dark" />}
         />
 
-        <div className="w-full max-h-[600px] lg:max-h-[500px] overflow-y-scroll flex flex-col gap-4">
+        <div className="w-full max-h-[600px] lg:max-h-[500px] overflow-y-scroll flex flex-col gap-4 pb-12">
           {/* Add Custom Subscription */}
           <div
             onClick={() => handleOpenModal(undefined)}
@@ -315,45 +315,47 @@ const ImportManualSubscription: React.FC = () => {
       </div>
 
       {/* Checkout Section */}
-      <section className="w-full z-40 lg:max-w-3xl mx-auto flex items-center justify-center fixed bottom-0 left-0 right-0 p-2">
-        <div className="w-full max-w-[100%] bg-primary shadow-2xl p-2 rounded-xl flex items-center justify-between">
-          <div className="flex items-center gap-2 p-4">
-            <div className="flex items-center -space-x-2">
+      {subscriptions.length ? (
+        <section className="w-full z-40 lg:max-w-3xl mx-auto flex items-center justify-center fixed bottom-0 left-0 right-0 p-2">
+          <div className="w-full max-w-[100%] bg-primary shadow-2xl p-2 rounded-xl flex items-center justify-between">
+            <div className="flex items-center gap-2 p-4">
+              <div className="flex items-center -space-x-2">
+                {subscriptions.length > 0 && (
+                  <>
+                    <Image
+                      key={subscriptions[0].merchant._id}
+                      src={subscriptions[0].merchant.logo || '/assets/custom-subs.svg'}
+                      alt={subscriptions[0].merchant.name}
+                      width={40}
+                      height={40}
+                      className="rounded-full border-2 border-primary bg-white"
+                      unoptimized
+                    />
+                    {subscriptions.length > 1 && (
+                      <div
+                        className="w-10 h-10 rounded-full bg-gray-400 text-white flex items-center justify-center text-sm font-semibold border-2 border-primary z-10"
+                        title={`And ${subscriptions.length - 1} more subscriptions`}
+                      >
+                        +{subscriptions.length - 1}
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
               {subscriptions.length > 0 && (
-                <>
-                  <Image
-                    key={subscriptions[0].merchant._id}
-                    src={subscriptions[0].merchant.logo || '/assets/custom-subs.svg'}
-                    alt={subscriptions[0].merchant.name}
-                    width={40}
-                    height={40}
-                    className="rounded-full border-2 border-primary bg-white"
-                    unoptimized
-                  />
-                  {subscriptions.length > 1 && (
-                    <div
-                      className="w-10 h-10 rounded-full bg-gray-400 text-white flex items-center justify-center text-sm font-semibold border-2 border-primary z-10"
-                      title={`And ${subscriptions.length - 1} more subscriptions`}
-                    >
-                      +{subscriptions.length - 1}
-                    </div>
-                  )}
-                </>
+                <p className="text-sm lg:text-base text-white font-normal">
+                  {subscriptions.length} {subscriptions.length > 1 ? "Subscriptions" : "Subscription"}
+                </p>
               )}
             </div>
-            {subscriptions.length > 0 && (
-              <p className="text-sm lg:text-base text-white font-normal">
-                {subscriptions.length} Subscriptions
-              </p>
-            )}
+            <div className="flex items-center gap-4 p-4">
+              <Button onClick={handleRoute} variant="light" size="sm" className="flex items-center gap-2" disabled={subscriptions.length === 0}>
+                Continue <MoveRight size={18} />
+              </Button>
+            </div>
           </div>
-          <div className="flex items-center gap-4 p-4">
-            <Button onClick={handleRoute} variant="light" size="sm" className="flex items-center gap-2" disabled={subscriptions.length === 0}>
-              Continue <MoveRight size={18} />
-            </Button>
-          </div>
-        </div>
-      </section>
+        </section>
+      ) : ''}
 
       <AddSubscriptionModal
         open={open}

@@ -5,6 +5,7 @@ import Image from 'next/image'
 import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/common/Button'
+import Link from 'next/link'
 
 const sourcesData = [
   {
@@ -13,6 +14,7 @@ const sourcesData = [
     subtitle: 'Automatically detect recurring charges from your bank account',
     description: '',
     icon: '/assets/resources/1.svg',
+    disabled: true,
   },
   {
     id: 'email',
@@ -20,6 +22,7 @@ const sourcesData = [
     subtitle: 'Gmail, Outlook, etc.',
     description: 'Scan your inbox for subscription receipts',
     icon: '/assets/resources/2.svg',
+    disabled: true,
   },
   {
     id: 'manual',
@@ -57,16 +60,16 @@ const Sources = () => {
           return (
             <section
               key={src.id}
-              onClick={() => setSelectedSource(src.id)}
+              onClick={() => !src.disabled && setSelectedSource(src.id)}
               className={`w-full border rounded-xl p-4 relative cursor-pointer transition-all duration-200 ${isActive
                 ? 'border-primary bg-gray-50'
                 : 'border-gray-300 hover:border-gray-400 hover:bg-gray-50'
-                }`}
+                } ${src.disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               <div className="flex items-start gap-4">
                 <Image src={src.icon} width={50} height={50} alt={src.title} />
                 <div className="flex flex-col gap-1">
-                  <h6 className="text-lg font-semibold text-black">
+                  <h6 className="text-lg font-semibold text-black max-w-[120px] lg:max-w-full">
                     {src.title}
                   </h6>
                   <p className="text-base text-gray-600">{src.subtitle}</p>
@@ -81,21 +84,25 @@ const Sources = () => {
                   ) : ''}
                 </div>
               </div>
-              <span
-                className={`w-5 h-5 rounded-full flex items-center justify-center absolute top-4 right-4 border ${isActive
-                  ? 'border-primary bg-primary'
-                  : 'border-gray-400 bg-white'
-                  }`}
-              >
-                {isActive && <div className="w-2 h-2 bg-white rounded-full" />}
-              </span>
+              {src.disabled ? (
+                <span className='px-4 py-1 rounded-2xl text-xs text-success flex items-center justify-center absolute top-4 right-4 border border-success bg-success/10' >Coming Soon</span>
+              ) : (
+                <span
+                  className={`w-5 h-5 rounded-full flex items-center justify-center absolute top-4 right-4 border ${isActive
+                    ? 'border-primary bg-primary'
+                    : 'border-gray-400 bg-white'
+                    }`}
+                >
+                  {isActive && <div className="w-2 h-2 bg-white rounded-full" />}
+                </span>
+              )}
             </section>
           )
         })}
       </div>
 
       {/* Continue Button */}
-      <div className="w-full z-50 lg:max-w-3xl mx-auto flex items-center justify-center gap-4 fixed bottom-2 left-0 right-0 p-2">
+      <div className="w-full z-50 lg:max-w-3xl mx-auto flex flex-col items-center justify-center gap-4 fixed bottom-2 left-0 right-0 p-2">
 
         <Button
           variant="primary"
@@ -107,6 +114,9 @@ const Sources = () => {
         >
           Continue <ArrowRight size={17} />
         </Button>
+        <Link className='text-base text-foreground' href='/dashboard'>
+          Skip
+        </Link>
       </div>
     </main>
   )

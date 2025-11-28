@@ -15,6 +15,7 @@ import toast from "react-hot-toast";
 import { MerchantType, Subscription } from "@/app/import-subscriptions/manual/page";
 import PaymentMethods from "./PaymentMethods";
 import { useMiscStore } from "@/store/miscStore";
+import { X } from "lucide-react";
 
 interface AddSubscriptionModalProps {
   open: boolean;
@@ -31,6 +32,7 @@ interface ClientErrors {
   nextPaymentDate?: string;
   category?: string;
   paymentMethod?: string;
+  packageName?:string;
 }
 
 const AddSubscriptionModal: React.FC<AddSubscriptionModalProps> = ({
@@ -72,6 +74,14 @@ const AddSubscriptionModal: React.FC<AddSubscriptionModalProps> = ({
 
   const closeModal = () => setOpen(false);
 
+  function getOneMonthAheadDate() {
+  const date = new Date();
+  date.setMonth(date.getMonth() + 1);
+
+  // Keep same day if possible (JS adjusts automatically for month length)
+  return date.toISOString().split("T")[0]; // returns YYYY-MM-DD
+}
+
   useEffect(() => {
     if (!open) return;
 
@@ -81,7 +91,7 @@ const AddSubscriptionModal: React.FC<AddSubscriptionModalProps> = ({
     setPrice("");
     setPackageName("");
     setBillingCycle({ name: "Monthly", value: "monthly" });
-    setNextPaymentDate("");
+    setNextPaymentDate(getOneMonthAheadDate());
     setCategory("");
     setIsOnFreeTrial(false);
     setActive(false);
@@ -134,7 +144,8 @@ const AddSubscriptionModal: React.FC<AddSubscriptionModalProps> = ({
 
     if (!nextPaymentDate) errors.nextPaymentDate = "Next renewal date is required";
     if (!category) errors.category = "Select a category";
-    if(!paymentMethod) errors.paymentMethod = "Select a payment method";
+    if (!paymentMethod) errors.paymentMethod = "Select a payment method";
+    if(!packageName.trim()) errors.packageName = "Package name is required" 
     setClientErrors(errors);
 
     return Object.keys(errors).length === 0;
@@ -208,8 +219,16 @@ const AddSubscriptionModal: React.FC<AddSubscriptionModalProps> = ({
   };
 
   return (
-    <Modal title="" isOpen={open} onClose={closeModal} h={90}>
-      <div className="w-full h-auto relative px-2 py-8">
+    <Modal title="" isOpen={open} onClose={closeModal} h={80}>
+      <div className="w-full h-auto relative px-2 pb-8">
+        <div className="flex items-center justify-end mb-2">
+          <button
+            onClick={closeModal}
+            className="w-10 h-10 rounded-full flex items-center justify-center hover:bg-gray-100 transition"
+          >
+            <X className="w-6 h-6" />
+          </button>
+        </div>
         {merchantDisplay ? (
           <div className="w-full flex items-center justify-between gap-4 border border-gray-300 p-4 rounded-xl mb-6">
             <div className="flex items-center gap-2">
@@ -256,8 +275,9 @@ const AddSubscriptionModal: React.FC<AddSubscriptionModalProps> = ({
           <Input
             value={packageName}
             onChange={setPackageName}
-            label="Package Name (Optional)"
+            label="Package Name"
             placeholder="e.g. Premium"
+            error={clientErrors.packageName}
           />
 
           <Input

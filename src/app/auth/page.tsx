@@ -81,15 +81,15 @@ export default function Login() {
       const subs_response = await getMySubscriptions();
       setUser(authResponse.user);
       setAuthenticated(true);
-      if (authResponse.user?.country) {
+      // if (authResponse.user?.country) {
         if (subs_response.length > 0) {
           router.push('/dashboard');
           return
         }
         router.push('/sources');
-      } else {
-        router.push('/countries');
-      }
+      // } else {
+      //   router.push('/countries');
+      // }
 
       toast.success('Login successful!');
     } catch (err: unknown) {
@@ -111,7 +111,7 @@ export default function Login() {
         return;
       }
       // Otherwise, connect using Google
-      await web3auth.connectTo("auth", { loginProvider: "google" });
+      await web3auth.connect();
 
       if (web3auth.connected) {
         const user = await web3auth.getUserInfo();

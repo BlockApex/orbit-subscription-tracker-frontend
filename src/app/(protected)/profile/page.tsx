@@ -28,31 +28,31 @@ const routes = [
         icon: DollarSign,
         link: ''
     },
-    {
-        title: 'Notification Preferences',
-        icon: Bell,
-        link: ''
-    },
-    {
-        title: 'App Theme',
-        icon: Moon,
-        link: ''
-    },
-    {
-        title: 'Security & Privacy',
-        icon: Shield,
-        link: ''
-    },
-    {
-        title: 'Language & Region',
-        icon: Map,
-        link: ''
-    },
-    {
-        title: 'Help & Support',
-        icon: Info,
-        link: ''
-    },
+    // {
+    //     title: 'Notification Preferences',
+    //     icon: Bell,
+    //     link: ''
+    // },
+    // {
+    //     title: 'App Theme',
+    //     icon: Moon,
+    //     link: ''
+    // },
+    // {
+    //     title: 'Security & Privacy',
+    //     icon: Shield,
+    //     link: ''
+    // },
+    // {
+    //     title: 'Language & Region',
+    //     icon: Map,
+    //     link: ''
+    // },
+    // {
+    //     title: 'Help & Support',
+    //     icon: Info,
+    //     link: ''
+    // },
 ]
 
 const Profile = () => {
@@ -104,14 +104,14 @@ const Profile = () => {
                     <div className='flex items-start gap-10'>
                         <div className='flex flex-col gap-2'>
 
-                                {count ? (
-                                    <p className='text-base text-black'>
-                                        {count}
-                                    </p>
-                                ) : ''}
-                                {loading ? (
-                                    <Spinner size='sm' />
-                                ) : ''}
+                            {count ? (
+                                <p className='text-base text-black'>
+                                    {count}
+                                </p>
+                            ) : ''}
+                            {loading ? (
+                                <Spinner size='sm' />
+                            ) : ''}
                             <p className='text-base text-foreground'>Active</p>
                         </div>
 
@@ -146,7 +146,7 @@ const Profile = () => {
                             )
                         })}
                     </div>
-                    <p className='text-base text-foreground my-4'>Data</p>
+                    {/* <p className='text-base text-foreground my-4'>Data</p>
 
                     <div className='w-full bg-white rounded-2xl flex items-center justify-between px-4 py-5'>
                         <div className='flex items-center gap-3'>
@@ -159,10 +159,11 @@ const Profile = () => {
                             </div>
                         </div>
 
+                    </div> */}
+
+                    <div className="w-full z-50 lg:max-w-3xl mx-auto flex items-center justify-center gap-4 fixed bottom-22 left-0 right-0 p-2">
+                        <Button variant='danger' size='full' className='flex items-center gap-4 mt-6' onClick={handleLogout} ><LogOut /> Logout</Button>
                     </div>
-
-
-                    <Button variant='danger' size='full' className='flex items-center gap-4 mt-6' onClick={handleLogout} ><LogOut /> Logout</Button>
                 </div>
             </main>
         </AppLayout>

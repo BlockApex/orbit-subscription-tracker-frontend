@@ -11,6 +11,7 @@ import { activeSubscription, cancelSubscription, deleteMySubscription, getSubscr
 import { Spinner } from "@/components/common/Spinner";
 import toast from "react-hot-toast";
 import { capitalizeFirstLetter } from "@/utils";
+import AddSubscriptionModal from "@/components/AddSubscriptionModal";
 
 interface ApiSubscriptionDetail {
     _id: string;
@@ -54,6 +55,7 @@ const SubscriptionDetail = () => {
     const [subscription, setSubscription] = useState<ApiSubscriptionDetail | null>(null);
     const [flag, setFlag] = useState(false);
     const [actionLoading, setActionLoading] = useState(false);
+    const [editOpen, setEditOpen] = useState(false);
 
     useEffect(() => {
         const fetchSubscription = async () => {
@@ -286,6 +288,14 @@ const SubscriptionDetail = () => {
                     </Button>
                 )}
             </div>
+
+            {/* <AddSubscriptionModal
+                open={editOpen}
+                setOpen={setEditOpen}
+                item={subscription}
+                isEditing={true}
+                handleAddSubscription={()=>null}
+            /> */}
         </main>
     );
 };

@@ -10,9 +10,9 @@ const BottomNav = () => {
 
     const navItems = [
         { href: '/dashboard', label: 'Home', icon: House },
-        { href: '/calender', label: 'Calender', icon: Calendar },
+        { href: '/calender', label: 'Calendar', icon: Calendar },
         { href: '/sources', label: '', icon: Plus , dark:true},
-        { href: '/stats', label: 'Stats', icon: PieChart },
+        { href: '#', label: 'Coming Soon', icon: PieChart },
         { href: '/profile', label: 'Profile', icon: User },
     ]
 

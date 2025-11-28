@@ -14,7 +14,7 @@ export type BillingCycleValue = {
 
 const cycles: BillingCycleValue[] = [
   { name: "Monthly", value: "monthly" },
-  { name: "Quarterly", value: "quarterly" },
+  // { name: "Quarterly", value: "quarterly" },
   { name: "Yearly", value: "yearly" },
 ];
 
@@ -77,7 +77,7 @@ const BillingCycle: React.FC<BillingCycleProps> = ({ value, onChange }) => {
     <div className="w-full">
       <label className="text-sm font-medium text-gray-700">Billing Cycle</label>
 
-      <div className="w-full grid grid-cols-2 gap-4 mt-1">
+      <div className="w-full grid grid-cols-3 gap-4 mt-1">
         {cycles.map((c) => {
           const active = c.value === value.value;
 

@@ -16,10 +16,10 @@ const TopBar = () => {
                 </div>
             </Link>
             <section>
-                <button className='flex items-center justify-center relative'>
+                {/* <button className='flex items-center justify-center relative'>
                     <Bell />
                     <span className='w-2 h-2 bg-red-500 rounded-full absolute top-0 right-0' />
-                </button>
+                </button> */}
             </section>
         </div>
     )
