@@ -95,7 +95,8 @@ const Sources = () => {
       </div>
 
       {/* Continue Button */}
-      <div className="fixed bottom-2 left-0 right-0 p-2 flex justify-center">
+      <div className="w-full z-50 lg:max-w-3xl mx-auto flex items-center justify-center gap-4 fixed bottom-2 left-0 right-0 p-2">
+
         <Button
           variant="primary"
           size="full"

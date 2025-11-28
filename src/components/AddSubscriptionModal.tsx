@@ -30,6 +30,7 @@ interface ClientErrors {
   price?: string;
   nextPaymentDate?: string;
   category?: string;
+  paymentMethod?: string;
 }
 
 const AddSubscriptionModal: React.FC<AddSubscriptionModalProps> = ({
@@ -133,7 +134,7 @@ const AddSubscriptionModal: React.FC<AddSubscriptionModalProps> = ({
 
     if (!nextPaymentDate) errors.nextPaymentDate = "Next renewal date is required";
     if (!category) errors.category = "Select a category";
-
+    if(!paymentMethod) errors.paymentMethod = "Select a payment method";
     setClientErrors(errors);
 
     return Object.keys(errors).length === 0;
@@ -290,6 +291,7 @@ const AddSubscriptionModal: React.FC<AddSubscriptionModalProps> = ({
             methods={paymentMethods}        // all saved payment methods
             selectedPaymentId={paymentMethod}  // current selection
             onSelect={setPaymentMethod}        // updates modal state
+            error={clientErrors.paymentMethod}
           />
           <div className="flex items-center justify-between">
             <span>Free Trial</span>
@@ -303,7 +305,7 @@ const AddSubscriptionModal: React.FC<AddSubscriptionModalProps> = ({
         </div>
 
         <div className="w-full mt-10">
-          <Button variant="primary" size="full" onClick={handleAdd}>
+          <Button variant="primary" size="full" loading={loading} onClick={handleAdd}>
             {isEditing ? "Save Changes" : "Add Subscription"}
           </Button>
         </div>

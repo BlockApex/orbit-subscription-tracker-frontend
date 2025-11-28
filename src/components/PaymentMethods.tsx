@@ -14,12 +14,14 @@ interface PaymentMethodsProps {
     methods: PaymentMethod[];
     selectedPaymentId?: string;
     onSelect?: (paymentId: string) => void; // controlled selection
+    error?: string;
 }
 
 const PaymentMethods: React.FC<PaymentMethodsProps> = ({
     methods,
     selectedPaymentId,
     onSelect,
+    error
 }) => {
     const { paymentRails, addMethod, removeMethod, updateMethod } = useMiscStore();
     const [open, setOpen] = useState(false);
@@ -102,7 +104,7 @@ const PaymentMethods: React.FC<PaymentMethodsProps> = ({
 
     return (
         <div className="relative w-full">
-            <label className="text-sm font-medium text-gray-700">Payment Method (Optional)</label>
+            <label className="text-sm font-medium text-gray-700">Payment Method</label>
             <div className='w-full border rounded-lg bg-white transition border-gray-300'>
                 <button
                     type="button"
@@ -198,6 +200,7 @@ const PaymentMethods: React.FC<PaymentMethodsProps> = ({
                     </div>
                 )}
             </div>
+            {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
         </div>
     );
 };
