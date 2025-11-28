@@ -97,11 +97,14 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <link rel="manifest" href="/manifest.json" />
+
         <meta name="theme-color" content="#F6754F" />
         <link rel="apple-touch-icon" href="/icons/192.png" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+
       </head>
       <body className={`${sfPro.variable} antialiased font-body`}>
         <AppRefresh />

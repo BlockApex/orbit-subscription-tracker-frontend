@@ -54,7 +54,7 @@ const Input: React.FC<InputProps> = ({
           placeholder={placeholder}
           disabled={disabled}
           className={clsx(
-            "w-full h-[50px] rounded-lg border px-3 py-2 text-sm outline-none transition-all duration-200",
+            "w-full h-[50px] rounded-lg border px-3 py-2 outline-none transition-all duration-200",
             icon && iconPosition === "left" && "pl-10", // 👈 add padding when icon on left
             icon && iconPosition === "right" && "pr-10", // 👈 add padding when icon on right
             disabled && "bg-gray-100 cursor-not-allowed opacity-60",
