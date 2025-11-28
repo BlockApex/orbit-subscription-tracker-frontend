@@ -7,11 +7,14 @@ import { ArrowLeft } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/common/Button";
 import Switch from "@/components/common/Switch";
-import { activeSubscription, cancelSubscription, deleteMySubscription, getSubscriptionById, renewSubscription } from "@/services/subscription.service";
+import { activeSubscription, cancelSubscription, deleteMySubscription, getSubscriptionById, renewSubscription, updateSubscription } from "@/services/subscription.service";
 import { Spinner } from "@/components/common/Spinner";
 import toast from "react-hot-toast";
 import { capitalizeFirstLetter } from "@/utils";
 import AddSubscriptionModal from "@/components/AddSubscriptionModal";
+import { Subscription } from "@/app/import-subscriptions/manual/page";
+import { useMiscStore } from "@/store/miscStore";
+import { getCategories, getMyPaymentMethods } from "@/services/misc.service";
 
 interface ApiSubscriptionDetail {
     _id: string;
@@ -50,6 +53,7 @@ const SubscriptionDetail = () => {
     const router = useRouter();
     const params = useParams(); // assuming Next.js app router
     const subscriptionId = params?.id as string;
+    const { categories, paymentMethods, setCategories, setMethods } = useMiscStore();
 
     const [loading, setLoading] = useState(true);
     const [subscription, setSubscription] = useState<ApiSubscriptionDetail | null>(null);
@@ -63,6 +67,17 @@ const SubscriptionDetail = () => {
                 setLoading(true);
                 const data = await getSubscriptionById(subscriptionId);
                 setSubscription(data);
+
+                // Fetch misc data if not available
+                if (categories.length === 0) {
+                    const cats = await getCategories();
+                    setCategories(cats);
+                }
+                if (paymentMethods.length === 0) {
+                    const methods = await getMyPaymentMethods();
+                    setMethods(methods);
+                }
+
             } catch (err: unknown) {
                 toast.error(err instanceof Error ? err.message : "Failed to fetch subscription");
             } finally {
@@ -73,7 +88,7 @@ const SubscriptionDetail = () => {
         if (subscriptionId) {
             fetchSubscription();
         }
-    }, [subscriptionId, flag]);
+    }, [subscriptionId, flag, categories.length, paymentMethods.length, setCategories, setMethods]);
 
     if (loading) {
         return (
@@ -92,8 +107,6 @@ const SubscriptionDetail = () => {
     }
 
     const price = (subscription.priceData.amount / 10 ** subscription.priceData.decimals).toFixed(2);
-
-
 
     const handleRenew = async () => {
         try {
@@ -164,6 +177,76 @@ const SubscriptionDetail = () => {
         }
     }
 
+    const handleUpdateSubscription = async (subs: Subscription) => {
+        const toastId = "update-subs";
+        toast.loading("Updating subscription...", { id: toastId });
+        try {
+            // Prepare payload similar to ImportManualSubscription
+            const data: Omit<Subscription, "merchant"> & {
+                currency: string;
+                merchant: string | {
+                    name: string;
+                    logo?: string;
+                    website?: string;
+                    custom?: boolean;
+                };
+            } = {
+                ...subs,
+                currency: "691f1f84c2b239c4a506fd0c" // Hardcoded as per reference
+            };
+
+            if (subs.merchant && typeof subs.merchant !== "string" && subs.merchant.custom) {
+                data.merchant = {
+                    name: subs.merchant.name,
+                    logo: subs.merchant.logo,
+                    website: subs.merchant.website,
+                    custom: true,
+                };
+            } else if (typeof subs.merchant !== "string") {
+                data.merchant = subs.merchant._id!;
+            }
+
+            // Remove modal-only fields
+            delete data.isEdit;
+            delete data.active;
+            delete data._id;
+
+            await updateSubscription(subscriptionId, data);
+            toast.success("Subscription updated!", { id: toastId });
+            setFlag(!flag); // Refresh data
+            setEditOpen(false);
+
+        } catch (err: unknown) {
+            toast.error(
+                err instanceof Error ? err.message : "Failed to update subscription",
+                { id: toastId }
+            );
+        }
+    };
+
+    // Adapter to convert ApiSubscriptionDetail to Subscription for the modal
+    const adaptedSubscription: Subscription | null = subscription ? {
+        _id: subscription._id,
+        merchant: {
+            _id: "custom", // Or find ID if available, but for display name/logo is enough if custom
+            name: subscription.merchant.name,
+            logo: subscription.merchant.logo,
+            custom: true // Treat as custom for editing purposes to preserve name/logo
+        },
+        packageName: subscription.packageName,
+        // Find category ID by name
+        category: categories.find(c => c.name === subscription.category.name)?._id || "",
+        frequency: subscription.frequency.text,
+        price: price,
+        // Find payment method ID by name
+        paymentMethod: paymentMethods.find(p => p.name === subscription.paymentMethod.name)?._id || "",
+        isOnFreeTrial: subscription.isOnFreeTrial,
+        nextPaymentDate: subscription.nextPaymentDate,
+        active: subscription.isActive,
+        isEdit: true
+    } : null;
+
+
     return (
         <main className="w-full min-h-screen relative overflow-hidden p-4">
             {/* Header */}
@@ -174,7 +257,7 @@ const SubscriptionDetail = () => {
                     </button>
                     <p className="text-lg text-black">Subscription Detail</p>
                 </div>
-                <button className="px-4 py-2 bg-primary/30 rounded-xl text-primary">Edit</button>
+                <button onClick={() => setEditOpen(true)} className="px-4 py-2 bg-primary/30 rounded-xl text-primary">Edit</button>
             </section>
 
             {/* Subscription Card */}
@@ -289,13 +372,13 @@ const SubscriptionDetail = () => {
                 )}
             </div>
 
-            {/* <AddSubscriptionModal
+            <AddSubscriptionModal
                 open={editOpen}
                 setOpen={setEditOpen}
-                item={subscription}
+                item={adaptedSubscription}
                 isEditing={true}
-                handleAddSubscription={()=>null}
-            /> */}
+                handleAddSubscription={handleUpdateSubscription}
+            />
         </main>
     );
 };
